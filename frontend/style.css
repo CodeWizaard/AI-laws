@@ -1,0 +1,92 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.search-panel {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+#search-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#show-all-btn {
+    padding: 10px 15px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    border-radius: 4px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+#show-all-btn:hover {
+    background-color: #2980b9;
+}
+
+.law-item {
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.law-item:hover {
+    background-color: #f9f9f9;
+}
+
+.law-item h3 {
+    margin: 0 0 5px 0;
+    color: #2980b9;
+}
+
+#law-details h2 {
+    color: #2c3e50;
+}
+
+#law-details p {
+    line-height: 1.6;
+}
+
+#back-btn {
+    padding: 10px 15px;
+    border: none;
+    background-color: #7f8c8d;
+    color: white;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+#back-btn:hover {
+    background-color: #6c7a7b;
+}
+
+.hidden {
+    display: none;
+}
