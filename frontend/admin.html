@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Админка законов ИИ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Админ-панель управления законами</h1>
+
+    <form id="law-form">
+      <input type="hidden" id="law-id">
+      <input type="text" id="law-country" placeholder="Страна" required>
+      <input type="text" id="law-title" placeholder="Название" required>
+      <input type="text" id="law-summary" placeholder="Описание" required>
+      <textarea id="law-full-text" placeholder="Полный текст" required></textarea>
+      <button type="submit" id="save-btn">Сохранить</button>
+      <button type="button" id="cancel-btn" style="display:none;">Отмена</button>
+    </form>
+
+    <hr/>
+    <div id="admin-results"></div>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>
