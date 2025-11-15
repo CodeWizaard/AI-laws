@@ -1,0 +1,2 @@
+docker exec -it ai_laws_db psql -U myuser -d ailaws
+Открытие портала в докер

@@ -113,3 +113,59 @@ async function deleteLaw(id) {
 }
 
 loadLaws();
+
+
+// Обработчик для формы регистрации
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('register-email').value;
+  const password = document.getElementById('register-password').value;
+
+  const response = await fetch('/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  
+  const result = await response.json();
+  alert(result.message); // Показать сообщение от сервера
+});
+
+// Обработчик для формы подтверждения
+document.getElementById('verify-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('verify-email').value;
+  const code = document.getElementById('verify-code').value;
+
+  const response = await fetch('/api/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, code }),
+  });
+
+  const result = await response.json();
+  alert(result.message);
+});
+
+// Обработчик для формы входа
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  const response = await fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (response.ok) {
+    const { token } = await response.json();
+    localStorage.setItem('authToken', token); // Сохраняем токен
+    alert('[translate:Вход выполнен успешно! Токен сохранен.]');
+    // Здесь можно перенаправить пользователя на защищенную страницу
+  } else {
+    const result = await response.json();
+    alert('[translate:Ошибка входа: ]' + result.message);
+  }
+});
