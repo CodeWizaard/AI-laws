@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Laws — Законы ИИ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <div class="logo">AI LAWS</div>
+
+      <nav class="nav" id="mainNav">
+        <a href="#features" class="nav__link">Возможности</a>
+        <a href="#solutions" class="nav__link">Решения</a>
+        <a href="#faq" class="nav__link">Вопросы</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="icon-button header__search">
+          <span class="icon-search"></span>
+          <span>ПОИСК</span>
+        </button>
+
+        <button
+          class="icon-button header__menu"
+          id="menuToggle"
+          aria-label="Открыть меню"
+        >
+          <span class="menu-dot"></span>
+          <span class="menu-dot"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="hero__gradient"></div>
+  <img src="./1.png" alt="" class="hero__bg-image" />
+
+    <div class="container hero__inner">
+      <section class="hero__content">
+        <p class="hero__eyebrow">В ОДНОМ ШАГЕ</p>
+
+        <h1 class="hero__title">
+          ЗАКОНЫ ИИ
+        </h1>
+
+        <p class="hero__subtitle">
+          Комплексная платформа для изучения и применения
+          искусственного интеллекта в правовой сфере.
+          Узнайте о принципах этичного ИИ, нормативно‑правовой базе
+          и лучших практиках внедрения алгоритмов
+          в юридические процессы.
+        </p>
+
+        <div class="hero__buttons">
+  <a href="#search" class="button button--outline button--main">
+    <span class="button__icon"></span>
+    <span class="button__label">Найти закон ИИ</span>
+  </a>
+
+  <a href="#explore" class="button button--primary">
+    Исследовать
+  </a>
+</div>
+
+      </section>
+
+   <aside class="hero-actions">
+  <!-- Левая колонка -->
+  <div class="hero-actions__col">
+    <p class="hero-actions__title">
+      Узнайте о<br />
+      новых технологиях
+    </p>
+
+    <a href="#learn" class="button button--outline hero-actions__button">
+      НАЧАТЬ ОБУЧЕНИЕ
+    </a>
+  </div>
+
+  <!-- Вертикальный разделитель -->
+  <div class="hero-actions__divider"></div>
+
+  <!-- Правая колонка -->
+  <div class="hero-actions__col">
+    <p class="hero-actions__title">
+      Войдите в<br />
+      свой профиль
+    </p>
+
+    <a href="#add-law" class="button button--outline hero-actions__button">
+      ДОБАВИТЬ ЗАКОН
+    </a>
+  </div>
+</aside>
+
+
+    </div>
+  </main>
+
+<!-- =========================
+     СЕКЦИЯ С КАРТОЧКАМИ ЗАКОНОВ
+     ========================= -->
+<section class="laws" id="laws">
+  <div class="container">
+    <h2 class="laws__heading">Популярные законы ИИ</h2>
+
+    <!-- ПУСТАЯ СЕТКА: сюда JS подставит карточки -->
+    <div class="laws__grid" id="laws-grid"></div>
+  </div>
+</section>
+
+
+  
+  <!-- Заглушки для будущих секций -->
+  <section id="features"></section>
+  <section id="solutions"></section>
+  <section id="faq"></section>
+  <section id="search"></section>
+  <section id="explore"></section>
+
+  <!-- Общие скрипты интерфейса -->
+  <script src="script.js"></script>
+
+  <!-- Скрипт, который создаёт карточки законов -->
+  <script src="laws.js"></script>
+  
+</body>
+</html>

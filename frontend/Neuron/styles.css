@@ -1,0 +1,577 @@
+/* ================================
+   Подключение шрифта Russo One
+   (локальный .ttf в папке Fonts/Russo_One)
+   ================================ */
+@font-face {
+  font-family: "Russo One";
+  src: url("./Fonts/Russo_One/RussoOne-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ================================
+   CSS‑переменные / тема
+   ================================ */
+:root {
+  --bg: #050505;
+  --bg-soft: #111111;
+  --bg-gradient: radial-gradient(circle at 70% 40%, #262626 0, #050505 55%);
+  --text-main: #ffffff;
+  --text-muted: #b3b3b3;
+  --border: #333333;
+  --accent: #ffffff;
+  --accent-soft: #111111;
+  --radius-pill: 999px;
+  --shadow-soft: 0 0 60px rgba(0, 0, 0, 0.7);
+}
+
+/* ================================
+   Базовая типографика и сброс
+   ================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+}
+
+/* ================================
+   Общий контейнер
+   ================================ */
+.container {
+  width: min(1200px, 100% - 40px);
+  margin-inline: auto;
+}
+
+/* ================================
+   Шапка сайта
+   ================================ */
+.header {
+  position: relative;
+  z-index: 10;
+  padding: 24px 0 12px;
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ================================
+   Навигация в шапке
+   ================================ */
+.nav {
+  display: flex;
+  gap: 32px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.nav__link {
+  color: var(--text-muted);
+  text-decoration: none;
+  position: relative;
+}
+
+.nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 1px;
+  background-color: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.nav__link:hover {
+  color: var(--text-main);
+}
+
+.nav__link:hover::after {
+  width: 100%;
+}
+
+/* ================================
+   Кнопки в шапке (поиск, меню)
+   ================================ */
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background-color: rgba(0, 0, 0, 0.4);
+  color: var(--text-main);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+}
+
+.icon-button span {
+  pointer-events: none;
+}
+
+.header__search {
+  padding-inline: 18px 24px;
+}
+
+/* Лупа в кнопке поиска */
+.icon-search {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  position: relative;
+}
+
+.icon-search::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--accent);
+  right: -4px;
+  bottom: -1px;
+  transform: rotate(45deg);
+}
+
+/* Кнопка меню (две точки) */
+.header__menu {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+.menu-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--accent);
+}
+
+.header__menu--open .menu-dot:nth-child(2) {
+  transform: translateY(-2px);
+}
+
+/* ================================
+   Hero‑секция
+   ================================ */
+.hero {
+  position: relative;
+  padding: 80px 0 80px;
+  overflow: hidden;
+}
+
+/* Радиальный градиент + фоновая картинка справа */
+.hero__gradient {
+  position: absolute;
+  inset: -80px -80px auto auto;
+  /* сначала картинка, потом градиент */
+  background-image: url("./1.png"), var(--bg-gradient);
+  background-repeat: no-repeat, no-repeat;
+  /* фиксированная позиция — можно подправить числа по вкусу */
+  background-position: right 260px center, center;
+  background-size: 900px auto, cover;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Альтернативный вариант — если используешь <img class="hero__bg-image"> */
+.hero__bg-image {
+  position: absolute;
+  right: 260px;          /* фикс от правого края */
+  top: 50%;              /* вертикальный центр секции */
+  transform: translateY(-50%);
+  width: 400px;          /* размер картинки, можно менять */
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.9;
+}
+
+/* Внутренняя сетка hero */
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1.2fr);
+  align-items: flex-end;
+  gap: 80px;
+}
+
+/* Левая колонка hero */
+.hero__content {
+  max-width: 1000px;
+}
+
+/* Маленький текст «В ОДНОМ ШАГЕ» */
+.hero__eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: right;
+  margin-bottom: 12px;
+  color: var(--text-muted);
+}
+
+/* Большой заголовок ЗАКОНЫ ИИ */
+.hero__title {
+  font-family: "Russo One", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: clamp(40px, 8vw, 230px);
+  line-height: 0.9;
+  text-transform: uppercase;
+  margin: 0 0 28px;
+  white-space: nowrap; /* не даём заголовку переноситься */
+}
+
+/* Подзаголовок с описанием */
+.hero__subtitle {
+  max-width: 440px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+
+/* Контейнер для двух основных кнопок */
+.hero__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ================================
+   Базовый стиль кнопок
+   ================================ */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+
+/* Заполненная белая кнопка */
+.button--primary {
+  background-color: var(--accent);
+  color: #000;
+}
+
+.button--primary:hover {
+  background-color: #e6e6e6;
+}
+
+/* Обводочная кнопка */
+.button--outline {
+  border: 1px solid var(--border);
+  background-color: transparent;
+  color: var(--text-main);
+}
+
+.button--outline:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* ================================
+   Главная кнопка "Найти закон ИИ"
+   ================================ */
+/* плавные переходы для самой кнопки */
+.button--main {
+  position: relative;               /* нужно для ::after и кружка */
+  border-color: #ffffff;
+  padding: 14px 40px 14px 76px;
+  gap: 12px;
+  overflow: hidden;                 /* обрезаем заливку по границам кнопки */
+
+  /* плавная анимация масштаба и бордера */
+  transition:
+    border-color 0.25s ease-out,
+    transform 0.25s ease-out,
+    color 0.25s ease-out;
+}
+
+/* фон-заливка, который будет расширяться при hover */
+.button--main::after {
+  content: "";
+  position: absolute;
+  inset: 0;                         /* растягиваем по всей кнопке */
+  background-color: #ffffff;        /* цвет заливки */
+  transform: scaleX(0);             /* по умолчанию невидим (ширина 0) */
+  transform-origin: left center;    /* рост слева направо */
+  transition: transform 0.3s ease-out;
+  z-index: 0;                       /* слой под контентом */
+}
+
+/* чтобы текст и иконка были над заливкой */
+.button__icon,
+.button__label {
+  position: relative;
+  z-index: 1;
+}
+
+/* круг со стрелкой — как раньше */
+.button__icon {
+  position: absolute;
+  left: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 0.25s ease-out,
+    background-color 0.25s ease-out;
+}
+
+/* стрелка внутри круга */
+.button__icon::before {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-width: 0 2px 2px 0;
+  border-style: solid;
+  border-color: transparent #000 #000 transparent;
+  transform: rotate(-45deg);
+  transition: transform 0.25s ease-out;
+}
+
+/* состояние при наведении: включаем заливку и чуть двигаем стрелку */
+.button--main:hover {
+  border-color: #ffffff;
+  transform: translateY(-1px);
+  color: #000000;                   /* текст становится чёрным на белом фоне */
+}
+
+/* заливка разворачивается по всей ширине */
+.button--main:hover::after {
+  transform: scaleX(1);
+}
+
+/* лёгкое движение кружка и стрелки вправо */
+.button--main:hover .button__icon {
+  transform: translateY(-50%) translateX(2px);
+}
+
+.button--main:hover .button__icon::before {
+  transform: translateX(1px) rotate(-45deg);
+}
+/* Обёртка для текста кнопки (на будущее) */
+.button__label {
+  position: relative;
+}
+/* ================================
+   Правая часть hero (две колонки)
+   ================================ */
+
+/* ================================
+   Блок справа: две колонки с разделителем
+   ================================ */
+
+.hero-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 56px;
+
+  /* новое: центрируем весь блок в ячейке грида */
+  justify-self: center;  /* по горизонтали внутри правого столбца */
+     /* по вертикали внутри правого столбца */
+}
+
+/* Одна колонка: заголовок + кнопка */
+.hero-actions__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;             /* центрируем содержимое по горизонтали */
+  text-align: right;              /* центрируем строки заголовка */
+}
+
+/* Заголовок над кнопкой */
+.hero-actions__title {
+  margin: 0 0 20px;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+/* Вертикальная линия между колонками */
+.hero-actions__divider {
+  width: 1px;
+  height: 120px;                   /* высота линии, подгони под макет */
+  align-self: stretch;             /* тянем по высоте блока */
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Кнопка под заголовком */
+.hero-actions__button {
+  padding-inline: 20px;
+  padding-block: 5px;
+  border-color: #ffffff;
+  font-size: 12px;
+}
+
+
+/* ================================
+   Анимация заливки для боковых кнопок
+   ("НАЧАТЬ ОБУЧЕНИЕ", "ДОБАВИТЬ ЗАКОН")
+   ================================ */
+
+.hero-actions__button {
+  position: relative;
+  overflow: hidden;                 /* обрезаем заливку по краям кнопки */
+  z-index: 0;
+  border-color: #ffffff;
+  color: #ffffff;
+
+  transition:
+    border-color 0.25s ease-out,
+    color 0.25s ease-out,
+    transform 0.25s ease-out;
+}
+
+/* фон-заливка (изначально с нулевой шириной) */
+.hero-actions__button::after {
+  content: "";
+  position: absolute;
+  inset: 0;                         /* растягиваем по всей кнопке */
+  background-color: #ffffff;
+  transform: scaleX(0);             /* скрыто по X */
+  transform-origin: left center;    /* растёт слева направо */
+  transition: transform 0.3s ease-out;
+  z-index: -1;                      /* под текстом */
+}
+
+/* состояние при наведении */
+.hero-actions__button:hover {
+  color: #000000;                   /* текст становится чёрным на белом фоне */
+  border-color: #ffffff;
+  transform: translateY(-1px);      /* лёгкий подъём */
+  background-color: transparent;    /* перекрываем .button--outline:hover */
+}
+
+/* включаем заливку */
+.hero-actions__button:hover::after {
+  transform: scaleX(1);
+}
+/* ================================
+   Адаптивность
+   ================================ */
+@media (max-width: 900px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+   .hero__side {
+    flex-direction: column;
+    gap: 32px;
+  }
+  .hero__side-divider {
+    display: none;
+  }
+  .hero__eyebrow {
+    text-align: left;
+  }
+}
+
+@media (max-width: 760px) {
+  /* моб. меню */
+  .nav {
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    padding: 16px 20px 20px;
+    flex-direction: column;
+    gap: 14px;
+    background-color: rgba(10, 10, 10, 0.96);
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .nav--open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .header__menu {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding-top: 64px;
+  }
+
+  .header__search {
+    display: none;
+  }
+
+  .hero__subtitle {
+    max-width: none;
+  }
+
+  .hero__buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero__side-block {
+    width: 100%;
+    text-align: left;
+  }
+
+  .hero__side {
+    align-items: stretch;
+  }
+}
