@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Просмотр закона ИИ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <div class="logo">AI LAWS</div>
+      <nav class="nav">
+        <a href="index.html" class="nav__link">Главная</a>
+        <a href="laws.html" class="nav__link">Все законы</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="law-page">
+    <div class="container">
+      <a href="laws.html" class="law-page__back">← ко всем законам</a>
+
+      <p class="law-page__country" id="law-country"></p>
+      <h1 class="law-page__title" id="law-title"></h1>
+      <p class="law-page__summary" id="law-summary"></p>
+
+      <article class="law-page__body" id="law-full-text"></article>
+    </div>
+  </main>
+
+  <script src="law-view.js"></script>
+</body>
+</html>
+3

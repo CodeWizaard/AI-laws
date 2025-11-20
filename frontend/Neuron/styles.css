@@ -519,6 +519,223 @@ body {
   }
 }
 
+
+
+
+
+
+
+
+/* ================================
+   Секция с карточками законов
+   ================================ */
+
+.laws {
+  padding: 80px 0 100px;
+}
+
+.laws__heading {
+  margin: 0 0 32px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Сетка карточек: до 4 в ряд на десктопе */
+.laws__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* Базовая карточка */
+.law-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 24px 0;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  background-color: #050505;
+  color: var(--text-main);
+  text-decoration: none;
+  overflow: hidden;
+  transition:
+    transform 0.25s ease-out,
+    box-shadow 0.25s ease-out,
+    border-color 0.25s ease-out,
+    background-color 0.25s ease-out;
+}
+
+/* Теги сверху карточки */
+.law-card__tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.law-tag {
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 11px;
+}
+
+/* Заголовок и текст */
+.law-card__title {
+  margin: 0 0 12px;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.law-card__excerpt {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* Нижний серый блок под превью */
+.law-card__footer {
+  margin-top: 32px;
+  height: 180px;
+  border-radius: 24px 24px 0 0;
+  background-color: #d3d3d3;
+}
+
+/* Ховер для тёмных карточек */
+.law-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+  border-color: #ffffff;
+}
+
+/* Выделенная (светлая) карточка */
+.law-card--featured {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.law-card--featured .law-tag {
+  border-color: #000000;
+}
+
+.law-card--featured .law-card__excerpt {
+  color: #333333;
+}
+
+.law-card--featured:hover {
+  background-color: #ffffff;
+  transform: translateY(-4px);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.45);
+}
+
+.law-card--featured .law-card__footer {
+  background-color: #d3d3d3;
+}
+
+/* Ховер-инверсия для обычных карточек */
+.law-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+  border-color: #ffffff;
+
+  /* делаем фон белым и текст чёрным */
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* цвет текста подзаголовка при hover */
+.law-card:hover .law-card__excerpt {
+  color: #333333;
+}
+
+/* теги на hover тоже инвертируем */
+.law-card:hover .law-tag {
+  border-color: #000000;
+}
+
+/* для выделенной карточки можно оставить отдельный ховер,
+   чтобы она просто чуть поднималась и усиливала тень */
+.law-card--featured {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.law-card--featured .law-tag {
+  border-color: #000000;
+}
+
+.law-card--featured .law-card__excerpt {
+  color: #333333;
+}
+
+.law-card--featured:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.45);
+}
+
+/* Страница просмотра закона */
+
+.law-page {
+  padding: 60px 0 80px;
+}
+
+.law-page__back {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #b3b3b3;
+  text-decoration: none;
+}
+
+.law-page__back:hover {
+  color: #ffffff;
+}
+
+.law-page__country {
+  margin: 0 0 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #b3b3b3;
+}
+
+.law-page__title {
+  margin: 0 0 16px;
+  font-size: 28px;
+  line-height: 1.3;
+}
+
+.law-page__summary {
+  margin: 0 0 24px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #b3b3b3;
+}
+
+.law-page__body p {
+  margin: 0 0 14px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+
+/* Адаптив: 2 колонки и 1 колонка КАРТОЧКИ */
+@media (max-width: 1100px) {
+  .laws__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .laws__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
 @media (max-width: 760px) {
   /* моб. меню */
   .nav {

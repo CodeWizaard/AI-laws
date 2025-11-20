@@ -1,209 +1,181 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель авторизации</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .container {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .form-card {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            box-sizing: border-box;
-        }
-        h3 {
-            text-align: center;
-            color: #1c1e21;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-        input[type="email"],
-        input[type="password"],
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 1rem;
-            border-radius: 6px;
-            border: 1px solid #dddfe2;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #1877f2;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        button:hover {
-            background-color: #166fe5;
-        }
-        .hidden {
-            display: none;
-        }
-        .message {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: #606770;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Админка законов</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 12px;
+    }
+
+    .form-row label {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .form-row input,
+    .form-row textarea,
+    .form-row select {
+      padding: 8px 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: 4px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 14px;
+    }
+
+    #save-btn {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    #cancel-btn {
+      background: #e5e7eb;
+      color: #111827;
+      display: none;
+    }
+
+    .law-item {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 10px 0;
+    }
+
+    .law-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .law-title {
+      font-weight: 600;
+    }
+
+    .law-country {
+      font-size: 13px;
+      color: #6b7280;
+      white-space: nowrap;
+    }
+
+    .law-summary {
+      font-size: 14px;
+      color: #374151;
+      margin-bottom: 6px;
+      white-space: pre-wrap;
+    }
+
+    .law-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .edit-btn {
+      background: #fbbf24;
+      color: #111827;
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+
+    .delete-btn {
+      background: #ef4444;
+      color: #fff;
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+
+    #admin-results-empty {
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      padding: 12px 0;
+    }
+  </style>
 </head>
 <body>
+  <h1>Админка законов</h1>
 
-<div class="container">
-    <!-- КАРТОЧКА РЕГИСТРАЦИИ -->
-    <div id="register-card" class="form-card">
-        <h3>Регистрация</h3>
-        <form id="register-form">
-            <input type="email" id="register-email" placeholder="Email" required>
-            <input type="password" id="register-password" placeholder="Пароль" required>
-            <button type="submit">Зарегистрироваться</button>
-        </form>
+  <!-- Форма добавления / редактирования -->
+  <div class="card">
+    <h2 id="form-title">Добавить закон</h2>
+    <form id="law-form">
+      <input type="hidden" id="law-id" />
+
+      <div class="form-row">
+        <label for="law-country">Страна</label>
+        <input id="law-country" type="text" placeholder="Например: Россия, ЕС, США" required />
+      </div>
+
+      <div class="form-row">
+        <label for="law-title">Название закона</label>
+        <input id="law-title" type="text" placeholder="Краткое название" required />
+      </div>
+
+      <div class="form-row">
+        <label for="law-summary">Краткое описание</label>
+        <textarea id="law-summary" placeholder="Краткое резюме закона" required></textarea>
+      </div>
+
+      <div class="form-row">
+        <label for="law-full-text">Полный текст (можно с разметкой)</label>
+        <textarea id="law-full-text" placeholder="Полный текст или развернутое описание"></textarea>
+      </div>
+
+      <div class="buttons">
+        <button id="save-btn" type="submit">Сохранить закон</button>
+        <button id="cancel-btn" type="button">Отмена</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Список законов -->
+  <div class="card">
+    <h2>Список законов</h2>
+    <div id="admin-results"></div>
+    <div id="admin-results-empty" style="display:none;">
+      Пока нет ни одного закона. Добавь первый через форму выше.
     </div>
+  </div>
 
-    <!-- КАРТОЧКА ПОДТВЕРЖДЕНИЯ (изначально скрыта) -->
-    <div id="verify-card" class="form-card hidden">
-        <h3>Подтверждение Email</h3>
-        <form id="verify-form">
-            <p class="message">На ваш email отправлен код. Пожалуйста, введите его ниже.</p>
-            <input type="email" id="verify-email" placeholder="Ваш Email" required>
-            <input type="text" id="verify-code" placeholder="Код из письма" required>
-            <button type="submit">Подтвердить</button>
-        </form>
-    </div>
-
-    <!-- КАРТОЧКА ВХОДА -->
-    <div id="login-card" class="form-card">
-        <h3>Вход</h3>
-        <form id="login-form">
-            <input type="email" id="login-email" placeholder="Email" required>
-            <input type="password" id="login-password" placeholder="Пароль" required>
-            <button type="submit">Войти</button>
-        </form>
-    </div>
-</div>
-
-<script>
-    const API_BASE_URL = 'http://localhost:3000'; // Убедитесь, что порт правильный
-
-    const registerForm = document.getElementById('register-form');
-    const verifyForm = document.getElementById('verify-form');
-    const loginForm = document.getElementById('login-form');
-    
-    const registerCard = document.getElementById('register-card');
-    const verifyCard = document.getElementById('verify-card');
-    const verifyEmailInput = document.getElementById('verify-email');
-
-    // --- ОБРАБОТЧИК РЕГИСТРАЦИИ ---
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-            
-            const result = await response.json();
-            alert(result.message);
-
-            if (response.ok) {
-                // Если регистрация успешна, показываем форму верификации
-                registerCard.classList.add('hidden');
-                verifyCard.classList.remove('hidden');
-                verifyEmailInput.value = email; // Автоматически подставляем email
-            }
-        } catch (error) {
-            alert('Произошла сетевая ошибка. Проверьте, запущен ли сервер.');
-            console.error('Ошибка регистрации:', error);
-        }
-    });
-
-    // --- ОБРАБОТЧИК ПОДТВЕРЖДЕНИЯ ---
-    verifyForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = verifyEmailInput.value;
-        const code = document.getElementById('verify-code').value;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/verify`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, code }),
-            });
-
-            const result = await response.json();
-            alert(result.message);
-
-            if(response.ok) {
-                // Если верификация успешна, можно скрыть эту форму
-                 verifyCard.classList.add('hidden');
-            }
-        } catch (error) {
-            alert('Произошла сетевая ошибка.');
-            console.error('Ошибка верификации:', error);
-        }
-    });
-
-    // --- ОБРАБОТЧИК ВХОДА ---
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (response.ok) {
-                const { token } = await response.json();
-                localStorage.setItem('authToken', token); // Сохраняем токен в локальное хранилище
-                alert('Вход выполнен успешно! Токен сохранен.');
-                // Здесь можно добавить логику для перехода на защищенную страницу,
-                // например: window.location.href = '/dashboard.html';
-            } else {
-                const result = await response.json();
-                alert('Ошибка входа: ' + result.message);
-            }
-        } catch (error) {
-            alert('Произошла сетевая ошибка.');
-            console.error('Ошибка входа:', error);
-        }
-    });
-</script>
-
+  <script src="admin.js"></script>
 </body>
 </html>

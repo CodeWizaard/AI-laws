@@ -1,5 +1,7 @@
+// Базовый URL твоего API
 const API_BASE_URL = 'http://localhost:3000';
 
+// Элементы формы
 const lawForm = document.getElementById('law-form');
 const lawId = document.getElementById('law-id');
 const lawCountry = document.getElementById('law-country');
@@ -8,91 +10,171 @@ const lawSummary = document.getElementById('law-summary');
 const lawFullText = document.getElementById('law-full-text');
 const saveBtn = document.getElementById('save-btn');
 const cancelBtn = document.getElementById('cancel-btn');
+const formTitle = document.getElementById('form-title');
+
+// Список
 const resultsDiv = document.getElementById('admin-results');
+const resultsEmpty = document.getElementById('admin-results-empty');
 
 let editMode = false;
 
+// Небольшой helper, чтобы не словить XSS при вставке строк в innerHTML
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 // --- Получить и отобразить все законы ---
 async function loadLaws() {
-  const res = await fetch(`${API_BASE_URL}/api/laws`);
-  const laws = await res.json();
-  console.log(laws);
-
-  renderLaws(laws);
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/laws`);
+    if (!res.ok) {
+      throw new Error('Ошибка загрузки законов');
+    }
+    const laws = await res.json();
+    renderLaws(laws);
+  } catch (err) {
+    console.error(err);
+    resultsDiv.innerHTML = '<div style="color:red;">Не удалось загрузить законы</div>';
+    resultsEmpty.style.display = 'none';
+  }
 }
 
 // --- Отрисовка списка ---
 function renderLaws(laws) {
   resultsDiv.innerHTML = '';
-  laws.forEach(law => {
+
+  if (!laws || laws.length === 0) {
+    resultsEmpty.style.display = 'block';
+    return;
+  }
+
+  resultsEmpty.style.display = 'none';
+
+  laws.forEach((law) => {
     const div = document.createElement('div');
     div.className = 'law-item';
+
     div.innerHTML = `
-      <b>${law.title}</b> | <i>${law.country}</i>
-      <button data-id="${law.id}" class="edit-btn">Редактировать</button>
-      <button data-id="${law.id}" class="delete-btn">Удалить</button>
-      <br><small>${law.summary}</small>
+      <div class="law-header">
+        <span class="law-title">${escapeHtml(law.title)}</span>
+        <span class="law-country">${escapeHtml(law.country)}</span>
+      </div>
+      <div class="law-summary">${escapeHtml(law.summary)}</div>
+      <div class="law-actions">
+        <button class="edit-btn" data-id="${law.id}">Редактировать</button>
+        <button class="delete-btn" data-id="${law.id}">Удалить</button>
+      </div>
     `;
+
     resultsDiv.appendChild(div);
   });
 
-  document.querySelectorAll('.delete-btn').forEach(btn =>
-    btn.onclick = () => deleteLaw(btn.dataset.id)
-  );
-  document.querySelectorAll('.edit-btn').forEach(btn =>
-    btn.onclick = () => editLaw(btn.dataset.id)
-  );
+  // Навешиваем обработчики
+  document.querySelectorAll('.edit-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      editLaw(id);
+    });
+  });
+
+  document.querySelectorAll('.delete-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      if (confirm('Удалить этот закон?')) {
+        deleteLaw(id);
+      }
+    });
+  });
 }
 
-// --- Добавить или обновить закон ---
-lawForm.onsubmit = async (e) => {
+// --- Сабмит формы: добавить или обновить закон ---
+lawForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+
   const law = {
-    country: lawCountry.value,
-    title: lawTitle.value,
-    summary: lawSummary.value,
-    full_text: lawFullText.value
+    country: lawCountry.value.trim(),
+    title: lawTitle.value.trim(),
+    summary: lawSummary.value.trim(),
+    full_text: lawFullText.value.trim(),
   };
 
-  if (editMode) {
-    // Обновление
-    await fetch(`${API_BASE_URL}/api/laws/${lawId.value}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(law)
-    });
-  } else {
-    // Добавление
-    await fetch(`${API_BASE_URL}/api/laws`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(law)
-    });
-  }
-  resetForm();
-  loadLaws();
-};
+  try {
+    if (editMode && lawId.value) {
+      // Обновление
+      await fetch(`${API_BASE_URL}/api/laws/${lawId.value}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(law),
+      });
+    } else {
+      // Добавление
+      await fetch(`${API_BASE_URL}/api/laws`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(law),
+      });
+    }
 
-function editLaw(id) {
-  fetch(`${API_BASE_URL}/api/laws`)
-    .then(res => res.json())
-    .then(laws => {
-      const law = laws.find(x => x.id == id);
-      lawId.value = law.id;
-      lawCountry.value = law.country;
-      lawTitle.value = law.title;
-      lawSummary.value = law.summary;
-      lawFullText.value = law.full_text;
-      editMode = true;
-      cancelBtn.style.display = '';
-      saveBtn.textContent = 'Обновить';
-    });
+    resetForm();
+    await loadLaws();
+  } catch (err) {
+    console.error(err);
+    alert('Ошибка при сохранении закона');
+  }
+});
+
+// --- Редактировать закон ---
+async function editLaw(id) {
+  try {
+    // Используем тот же эндпоинт, что и раньше, получая все законы и находя нужный
+    const res = await fetch(`${API_BASE_URL}/api/laws`);
+    if (!res.ok) {
+      throw new Error('Ошибка загрузки законов');
+    }
+    const laws = await res.json();
+    const law = laws.find((x) => String(x.id) === String(id));
+
+    if (!law) {
+      alert('Закон не найден');
+      return;
+    }
+
+    lawId.value = law.id;
+    lawCountry.value = law.country || '';
+    lawTitle.value = law.title || '';
+    lawSummary.value = law.summary || '';
+    lawFullText.value = law.full_text || '';
+
+    editMode = true;
+    cancelBtn.style.display = 'inline-block';
+    saveBtn.textContent = 'Обновить закон';
+    formTitle.textContent = 'Редактирование закона';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    console.error(err);
+    alert('Ошибка при загрузке закона для редактирования');
+  }
 }
 
-cancelBtn.onclick = function () {
-  resetForm();
-};
+// --- Удалить закон ---
+async function deleteLaw(id) {
+  try {
+    await fetch(`${API_BASE_URL}/api/laws/${id}`, {
+      method: 'DELETE',
+    });
+    await loadLaws();
+  } catch (err) {
+    console.error(err);
+    alert('Ошибка при удалении закона');
+  }
+}
 
+// --- Сброс формы в режим "Добавить" ---
 function resetForm() {
   lawId.value = '';
   lawCountry.value = '';
@@ -101,71 +183,16 @@ function resetForm() {
   lawFullText.value = '';
   editMode = false;
   cancelBtn.style.display = 'none';
-  saveBtn.textContent = 'Сохранить';
+  saveBtn.textContent = 'Сохранить закон';
+  formTitle.textContent = 'Добавить закон';
 }
 
-// --- Удалить закон ---
-async function deleteLaw(id) {
-    console.log(id);
-  await fetch(`${API_BASE_URL}/api/laws/${id}`, { method: 'DELETE' });
+// Кнопка "Отмена"
+cancelBtn.addEventListener('click', () => {
+  resetForm();
+});
 
+// Первичная загрузка
+window.addEventListener('DOMContentLoaded', () => {
   loadLaws();
-}
-
-loadLaws();
-
-
-// Обработчик для формы регистрации
-document.getElementById('register-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('register-email').value;
-  const password = document.getElementById('register-password').value;
-
-  const response = await fetch('/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-  });
-  
-  const result = await response.json();
-  alert(result.message); // Показать сообщение от сервера
-});
-
-// Обработчик для формы подтверждения
-document.getElementById('verify-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('verify-email').value;
-  const code = document.getElementById('verify-code').value;
-
-  const response = await fetch('/api/verify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, code }),
-  });
-
-  const result = await response.json();
-  alert(result.message);
-});
-
-// Обработчик для формы входа
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('login-email').value;
-  const password = document.getElementById('login-password').value;
-
-  const response = await fetch('/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-  });
-
-  if (response.ok) {
-    const { token } = await response.json();
-    localStorage.setItem('authToken', token); // Сохраняем токен
-    alert('[translate:Вход выполнен успешно! Токен сохранен.]');
-    // Здесь можно перенаправить пользователя на защищенную страницу
-  } else {
-    const result = await response.json();
-    alert('[translate:Ошибка входа: ]' + result.message);
-  }
 });
