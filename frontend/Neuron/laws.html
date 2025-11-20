@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Просмотр закона ИИ</title>
+  <title>Все законы ИИ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -17,18 +17,27 @@
     </div>
   </header>
 
-  <main class="law-page">
+  <main class="laws-page">
     <div class="container">
-      <a href="laws.html" class="law-page__back">← ко всем законам</a>
+      <h1 class="laws__heading">Все законы</h1>
 
-      <p class="law-page__country" id="law-country"></p>
-      <h1 class="law-page__title" id="law-title"></h1>
-      <p class="law-page__summary" id="law-summary"></p>
+      <form class="laws-search" id="laws-search-form">
+  <input
+    type="text"
+    id="laws-query"
+    class="laws-search__input"
+    placeholder="Страна, название или ключевое слово"
+  />
+  <button class="button button--primary" type="submit">
+    НАЙТИ
+  </button>
+</form>
 
-      <article class="law-page__body" id="law-full-text"></article>
+
+      <div class="laws__grid" id="laws-search-results"></div>
     </div>
   </main>
 
-  <script src="law-view.js"></script>
+  <script src="laws-search.js"></script>
 </body>
 </html>

@@ -57,25 +57,66 @@ app.get('/api/laws', async (req, res) => {
 });
 
 app.get('/api/search', async (req, res) => {
-    const query = req.query.q;
-    if (!query) return res.json([]);
-    
-    try {
-        const searchQuery = `
-            SELECT * FROM laws 
-            WHERE title ILIKE $1 
-               OR country ILIKE $1 
-               OR summary ILIKE $1
-            ORDER BY id
-        `;
-        const result = await pool.query(searchQuery, [`%${query}%`]);
-        res.json(result.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Ошибка сервера');
+  const q = (req.query.q || '').trim();
+
+  try {
+    // Если строка пустая — просто вернуть все законы (кратко)
+    if (!q) {
+      const all = await pool.query(
+        'SELECT id, country, title, summary FROM laws ORDER BY id DESC'
+      );
+      return res.json(all.rows);
     }
+
+    const like = '%' + q.toLowerCase() + '%';
+
+    const result = await pool.query(
+      `SELECT id, country, title, summary
+       FROM laws
+       WHERE lower(country) LIKE $1
+          OR lower(title)   LIKE $1
+          OR lower(summary) LIKE $1
+       ORDER BY id DESC`,
+      [like]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error searching laws:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
+
+
+app.get(' ', async (req, res) => {
+  const { q } = req.query;
+  const term = (q || '').trim();
+
+  try {
+    if (!term) {
+      const all = await pool.query(
+        'SELECT id, country, title, summary FROM laws ORDER BY id DESC'
+      );
+      return res.json(all.rows);
+    }
+
+    const like = '%' + term.toLowerCase() + '%';
+    const result = await pool.query(
+      `SELECT id, country, title, summary
+       FROM laws
+       WHERE lower(country) LIKE $1
+          OR lower(title)   LIKE $1
+          OR lower(summary) LIKE $1
+       ORDER BY id DESC`,
+      [like]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error searching laws:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 // Получить один закон по id
 app.get('/api/laws/:id', async (req, res) => {
